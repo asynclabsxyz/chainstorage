@@ -2,9 +2,10 @@ package cadence
 
 import (
 	"context"
-	"crypto/tls"
-	"crypto/x509"
-	"net"
+	//"crypto/tls"
+	//"crypto/x509"
+	"fmt"
+	//"net"
 	"time"
 
 	"go.temporal.io/api/serviceerror"
@@ -68,36 +69,37 @@ func NewRuntime(params RuntimeParams) (Runtime, error) {
 	runtimeLogger := logur.LoggerToKV(zapadapter.New(logger))
 
 	address := params.Config.Cadence.Address
-	tlsConfig := params.Config.Cadence.TLSConfig
+	fmt.Printf("\nAdress: %s\n", address)
+	// tlsConfig := params.Config.Cadence.TLSConfig
 	connectionOptions := client.ConnectionOptions{}
-	if tlsConfig.Enabled && params.Config.Env() != config.EnvLocal {
-		host, _, err := net.SplitHostPort(address)
-		if err != nil {
-			return nil, xerrors.Errorf("failed to parse address (%v): %w", address, err)
-		}
+	// if tlsConfig.Enabled && params.Config.Env() != config.EnvLocal {
+	// 	host, _, err := net.SplitHostPort(address)
+	// 	if err != nil {
+	// 		return nil, xerrors.Errorf("failed to parse address (%v): %w", address, err)
+	// 	}
 
-		connectionOptions.TLS = &tls.Config{
-			MinVersion:         tls.VersionTLS12,
-			ServerName:         host,
-			InsecureSkipVerify: !tlsConfig.ValidateHostname,
-		}
+	// 	connectionOptions.TLS = &tls.Config{
+	// 		MinVersion:         tls.VersionTLS12,
+	// 		ServerName:         host,
+	// 		InsecureSkipVerify: !tlsConfig.ValidateHostname,
+	// 	}
 
-		if tlsConfig.CertificateAuthority != "" {
-			caCertPool := x509.NewCertPool()
-			if !caCertPool.AppendCertsFromPEM([]byte(tlsConfig.CertificateAuthority)) {
-				return nil, xerrors.Errorf("failed to parse CA certificate: %v", tlsConfig.CertificateAuthority)
-			}
-			connectionOptions.TLS.RootCAs = caCertPool
-		}
+	// 	if tlsConfig.CertificateAuthority != "" {
+	// 		caCertPool := x509.NewCertPool()
+	// 		if !caCertPool.AppendCertsFromPEM([]byte(tlsConfig.CertificateAuthority)) {
+	// 			return nil, xerrors.Errorf("failed to parse CA certificate: %v", tlsConfig.CertificateAuthority)
+	// 		}
+	// 		connectionOptions.TLS.RootCAs = caCertPool
+	// 	}
 
-		if tlsConfig.ClientCertificate != "" && tlsConfig.ClientPrivateKey != "" {
-			clientCert, err := tls.X509KeyPair([]byte(tlsConfig.ClientCertificate), []byte(tlsConfig.ClientPrivateKey))
-			if err != nil {
-				return nil, xerrors.Errorf("failed to parse client certificate or key (%v): %w", tlsConfig.ClientCertificate, err)
-			}
-			connectionOptions.TLS.Certificates = []tls.Certificate{clientCert}
-		}
-	}
+	// 	if tlsConfig.ClientCertificate != "" && tlsConfig.ClientPrivateKey != "" {
+	// 		clientCert, err := tls.X509KeyPair([]byte(tlsConfig.ClientCertificate), []byte(tlsConfig.ClientPrivateKey))
+	// 		if err != nil {
+	// 			return nil, xerrors.Errorf("failed to parse client certificate or key (%v): %w", tlsConfig.ClientCertificate, err)
+	// 		}
+	// 		connectionOptions.TLS.Certificates = []tls.Certificate{clientCert}
+	// 	}
+	// }
 
 	options := client.Options{
 		Namespace:         params.Config.Cadence.Domain,

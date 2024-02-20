@@ -1154,6 +1154,8 @@ func (c *EthereumClient) createFailedTransactionTraceDLQMessage(ctx context.Cont
 }
 
 func (c *EthereumClient) GetLatestHeight(ctx context.Context) (uint64, error) {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
 	switch c.commitmentLevel {
 	case types.CommitmentLevelSafe, types.CommitmentLevelFinalized:
 		response, err := c.client.Call(ctx, ethGetBlockByNumberMethod, jsonrpc.Params{

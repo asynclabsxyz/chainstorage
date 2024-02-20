@@ -17,6 +17,7 @@ import (
 	"github.com/coinbase/chainstorage/internal/gateway"
 	"github.com/coinbase/chainstorage/internal/s3"
 	"github.com/coinbase/chainstorage/internal/storage"
+	"github.com/coinbase/chainstorage/internal/storage/blobstorage/downloader"
 	"github.com/coinbase/chainstorage/internal/tally"
 	"github.com/coinbase/chainstorage/internal/tracer"
 	"github.com/coinbase/chainstorage/internal/utils/consts"
@@ -45,6 +46,7 @@ func startManager(opts ...fx.Option) services.SystemManager {
 		cron.Module,
 		dlq.Module,
 		sdk.Module,
+		downloader.Module,
 		endpoints.Module,
 		fxparams.Module,
 		gateway.Module,

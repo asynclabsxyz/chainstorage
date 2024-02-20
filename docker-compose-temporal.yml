@@ -1,8 +1,9 @@
-version: '3'
+version: "3"
+
 volumes:
   postgres_data: {}
+
 services:
-  # Temporal-related containers
   postgresql:
     image: postgres:15.4-alpine
     ports:
@@ -47,26 +48,3 @@ services:
     image: temporalio/admin-tools:1.22.0
     stdin_open: true
     tty: true
-  
-  admin:
-    command: ["-c", "trap : INT TERM QUIT; sleep infinity & wait"]
-    entrypoint: /bin/bash
-    image: joshuasuasync/chainstorage:0.0.2
-    restart: always
-    network_mode: host
-    environment:
-      - CHAINSTORAGE_ENVIRONMENT=production
-  api:
-    command: ["./server"]
-    image: joshuasuasync/chainstorage:0.0.2
-    restart: always
-    environment:
-      - CHAINSTORAGE_ENVIRONMENT=production
-      - CHAINSTORAGE_CADENCE_ADDRESS=temporal:7233
-  cron:
-    command: ["./cron"]
-    image: joshuasuasync/chainstorage:0.0.2
-    restart: always
-    network_mode: host
-    environment:
-      - CHAINSTORAGE_ENVIRONMENT=production

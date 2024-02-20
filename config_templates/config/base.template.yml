@@ -14,15 +14,15 @@ aws:
   bucket: ""
   dlq:
     delay_secs: 900
-    name: example_chainstorage_blocks_{{blockchain}}_{{network}}_dlq
+    name: chainstorage_blocks_{{blockchain}}_{{network}}_dlq
     visibility_timeout_secs: 600
   dynamodb:
-    block_table: example_chainstorage_blocks_{{blockchain}}_{{network}}
-    versioned_event_table: example_chainstorage_versioned_block_events_{{blockchain}}_{{network}}
-    versioned_event_table_block_index: example_chainstorage_versioned_block_events_by_block_id_{{blockchain}}_{{network}}
-    transaction_table: example_chainstorage_transactions_table_{{blockchain}}_{{network}}
+    block_table: chainstorage_blocks_{{blockchain}}_{{network}}
+    versioned_event_table: chainstorage_versioned_block_events_{{blockchain}}_{{network}}
+    versioned_event_table_block_index: chainstorage_versioned_block_events_by_block_id_{{blockchain}}_{{network}}
+    transaction_table: chainstorage_transactions_table_{{blockchain}}_{{network}}
   presigned_url_expiration: 30m
-  region: us-east-1
+  region: us-west-1
   storage:
     data_compression: GZIP
 gcp:

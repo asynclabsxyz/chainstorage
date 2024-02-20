@@ -1,6 +1,6 @@
 aws:
   aws_account: development
-  bucket: example-chainstorage-{{blockchain}}-{{network}}-{{short_env}}
+  bucket: chainstorage-{{blockchain}}-{{network}}-{{short_env}}
 cadence:
   address: temporal-dev.example.com:7233
 sdk:

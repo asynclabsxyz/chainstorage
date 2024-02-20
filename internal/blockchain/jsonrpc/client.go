@@ -168,6 +168,8 @@ func newRetry(params ClientParams, logger *zap.Logger) retry.Retry {
 }
 
 func (c *clientImpl) Call(ctx context.Context, method *RequestMethod, params Params, opts ...Option) (*Response, error) {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
 	var options options
 	for _, opt := range opts {
 		opt(&options)
@@ -207,6 +209,8 @@ func (c *clientImpl) Call(ctx context.Context, method *RequestMethod, params Par
 }
 
 func (c *clientImpl) BatchCall(ctx context.Context, method *RequestMethod, batchParams []Params, opts ...Option) ([]*Response, error) {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
 	var options options
 	for _, opt := range opts {
 		opt(&options)
@@ -324,8 +328,12 @@ func (c *clientImpl) makeHTTPRequest(ctx context.Context, timeout time.Duration,
 		request.SetBasicAuth(user, password)
 	}
 
+	fmt.Printf("data: %+v\n", data)
+	fmt.Printf("endpoint: %+v\n", endpoint.Config)
 	response, err := c.getHTTPClient(endpoint).Do(request)
 	if err != nil {
+		fmt.Printf("err: %v\n", err)
+		fmt.Printf("context: %v\n", ctx.Err())
 		err = c.sanitizedError(err)
 		return retry.Retryable(xerrors.Errorf("failed to send http request: %w", err))
 	}

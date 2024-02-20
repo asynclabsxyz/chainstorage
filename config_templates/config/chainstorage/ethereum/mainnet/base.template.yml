@@ -1,13 +1,39 @@
 aws:
   aws_account: development
-  bucket: example-chainstorage-ethereum-mainnet-dev
+  bucket: chainstorage-ethereum-mainnet-dev
   dlq:
-    name: example_chainstorage_blocks_ethereum_mainnet_dlq
+    name: chainstorage_blocks_ethereum_mainnet_dlq
   dynamodb:
-    block_table: example_chainstorage_blocks_ethereum_mainnet
-    event_table: example_chainstorage_block_events_ethereum_mainnet
-    event_table_height_index: example_chainstorage_block_events_by_height_eth_main
+    block_table: chainstorage_blocks_ethereum_mainnet
+    event_table: chainstorage_block_events_ethereum_mainnet
+    event_table_height_index: chainstorage_block_events_by_height_eth_main
 chain:
+  client:
+    master:
+      endpoint_group: |
+        {
+          "endpoints": [
+            {
+              "name": "eth-rpc-nodes-erigon-prysm-sticky",
+              "url": "https://ethereum-mainnet.s.chainbase.online/v1/2c6jWYuGAvg7GqwVaxe8Uj1FBat",
+              "weight": 1
+            }
+          ],
+          "sticky_session": {
+            "header_hash": "x-session-hash"
+          }
+        }
+    slave:
+      endpoint_group: |
+        {
+          "endpoints": [
+            {
+              "name": "eth-rpc-nodes-erigon-prysm-round-robin",
+              "url": "https://ethereum-mainnet.s.chainbase.online/v1/2c6jWYuGAvg7GqwVaxe8Uj1FBat",
+              "weight": 1
+            }
+          ]
+        }
   block_tag:
     latest: 2
     stable: 2
